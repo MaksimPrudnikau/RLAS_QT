@@ -215,7 +215,7 @@ p, li { white-space: pre-wrap; }
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="PointY_3"/>
+          <widget class="QLineEdit" name="Point3_Y"/>
          </item>
         </layout>
        </item>
@@ -371,7 +371,7 @@ p, li { white-space: pre-wrap; }
   <tabstop>Point2_X</tabstop>
   <tabstop>Point2_Y</tabstop>
   <tabstop>Point3_X</tabstop>
-  <tabstop>PointY_3</tabstop>
+  <tabstop>Point3_Y</tabstop>
   <tabstop>Alpha_Degrees</tabstop>
   <tabstop>Alpha_Seconds</tabstop>
   <tabstop>Point1_X</tabstop>
@@ -383,8 +383,26 @@ p, li { white-space: pre-wrap; }
  <resources>
   <include location="RLAS.qrc"/>
  </resources>
- <connections/>
+ <connections>
+  <connection>
+   <sender>CalculateButton</sender>
+   <signal>clicked()</signal>
+   <receiver>RLASClass</receiver>
+   <slot>Calculate()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>471</x>
+     <y>575</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>479</x>
+     <y>601</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
  <slots>
   <slot>ifDouble()</slot>
+  <slot>Calculate()</slot>
  </slots>
 </ui>
