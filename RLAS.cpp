@@ -1,6 +1,8 @@
 #pragma once
+#define _USE_MATH_DEFINES
 #include "RLAS.h"
 #include "qstring.h"
+#include <cmath>
 RLAS::RLAS(QWidget *parent)
     : QMainWindow(parent)
 {
@@ -87,30 +89,57 @@ void RLAS::checkAngles(Angle angle)
 double  RLAS::ctg(Angle angle)
 {
 	//Перевод из grad.min.sec в в rad
-	return NULL;
+	double angle_in_rad = (angle.grad + angle.min / 60. + angle.sec / 3600.) * M_PI / 180.;
+	return cos(angle_in_rad) / sin(angle_in_rad);
 }
 
 //Расчёт котангенса угла Y
 double  RLAS::setCtgY(vector<Point> points, Angle alpha, Angle beta)
 {
-	return NULL;
+	double
+		numerator, //числитель
+		denominator; // знаменатель
+	numerator =
+		(points[1].y - points[0].y) * ctg(alpha)
+		- (points[2].y - points[1].y) * ctg(beta)
+		+ (points[0].x - points[2].x);
+	denominator =
+		(points[1].x - points[0].x) * ctg(alpha)
+		- (points[2].x - points[1].x) * ctg(beta)
+		- (points[0].y - points[2].y);
+	return numerator / denominator;
 }
 
 //Расчёт Z
 double  RLAS::setZ(vector<Point> points, Angle alpha, Angle beta, double ctgY)
 {
-	return NULL;
+	double
+		Z1,
+		Z2;
+	Z1 =
+		(points[1].y - points[0].y) * (ctg(alpha) - ctgY)
+		- (points[1].x - points[0].x) * (1 + ctg(alpha) * ctgY);
+	Z2 =
+		(points[2].y - points[1].y) * (ctg(beta) + ctgY)
+		+ (points[2].x - points[1].x) * (1 - ctg(beta) * ctgY);
+	return (Z1 + Z2) / 2.;
 }
 
-void  RLAS::getStationCoordinates(double x, double y)
-{
-}
 
 //Вычисление координат исходного пункта
-void  RLAS::setAndGetStationCoordinates(vector<Point> points, double z, double ctgY)
+Point  RLAS::setStationCoordinates(vector<Point> points, double z, double ctgY)
 {
+	double delta_x = z / (1. + pow(ctgY, 2));
+	double delta_y = delta_x * ctgY;
+	double x = points[1].x + delta_x;
+	double y = points[1].y + delta_y;
+	return Point({ x,y });
 }
 
+//make me
+void  RLAS::getStationCoordinates(Point station)
+{
+}
 void RLAS::Calculate()
 {
 	vector<Point> points;
@@ -121,4 +150,7 @@ void RLAS::Calculate()
 	importAngles(alpha, beta);
 	checkAngles(alpha);
 	checkAngles(beta);
+	double ctgY = setCtgY(points, alpha, beta);
+	double z = setZ(points, alpha, beta, ctgY);
+	getStationCoordinates(setStationCoordinates(points, z, ctgY));
 }
