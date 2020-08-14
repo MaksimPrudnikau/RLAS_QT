@@ -25,7 +25,7 @@ public:
    double setCtgY(vector<Point>, Angle, Angle);
    double setZ(vector<Point>, Angle, Angle, double);
    Point setStationCoordinates(vector<Point>, double, double);
-   void getStationCoordinates(Point);
+   void getStationCoordinates(Point, RLAS*);
 
 private slots:
     void Calculate();

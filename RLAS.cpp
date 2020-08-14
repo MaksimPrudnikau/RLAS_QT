@@ -2,6 +2,7 @@
 #define _USE_MATH_DEFINES
 #include "RLAS.h"
 #include "qstring.h"
+#include <qlocale.h>
 #include <cmath>
 RLAS::RLAS(QWidget *parent)
     : QMainWindow(parent)
@@ -137,8 +138,10 @@ Point  RLAS::setStationCoordinates(vector<Point> points, double z, double ctgY)
 }
 
 //make me
-void  RLAS::getStationCoordinates(Point station)
+void  RLAS::getStationCoordinates(Point station, RLAS* Window)
 {
+	Window->ui.Station_X->setText(QString::number(station.x, 'f', 3));
+	Window->ui.Station_Y->setText(QString::number(station.y, 'f', 3));
 }
 void RLAS::Calculate()
 {
@@ -152,5 +155,5 @@ void RLAS::Calculate()
 	checkAngles(beta);
 	double ctgY = setCtgY(points, alpha, beta);
 	double z = setZ(points, alpha, beta, ctgY);
-	getStationCoordinates(setStationCoordinates(points, z, ctgY));
+	getStationCoordinates(setStationCoordinates(points, z, ctgY),this);
 }
