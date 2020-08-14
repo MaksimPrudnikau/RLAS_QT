@@ -13,6 +13,7 @@ struct Angle
 {
 	double
 		grad,
-		min,
 		sec;
+	int
+		min;
 };

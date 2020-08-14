@@ -42,33 +42,28 @@ void RLAS::importAngles(Angle& alpha, Angle& beta)
 }
 
 //Ввод дирекционных углов
-void RLAS::checkAngles(Angle angle)
+bool RLAS::checkAngles(Angle angle)
 {
 	bool
 		AngleIsCorrect = false, //Общий уровень корректности угла
 		grad_is_correct = false,
 		min_is_correct = false,
 		sec_is_correct = false;
-
-	while (AngleIsCorrect != true)
-	{
 		if (angle.grad <= 360.0)
 		{
 			grad_is_correct = true;
 		}
 		else
 		{
-			ui.statusBar->showMessage("Градусы не могут превышать больше 360");
-			continue;
+			statusBar()->showMessage(QString::fromLocal8Bit("Градусы не могут превышать больше 360"));
 		}
-		if (angle.min <= 60.0)
+		if (angle.min <= 60)
 		{
 			min_is_correct = true;
 		}
 		else
 		{
-			ui.statusBar->showMessage("Минуты не могут превышать больше 360");
-			continue;
+			statusBar()->showMessage(QString::fromLocal8Bit("Минуты не могут превышать больше 60"));
 		}
 		if (angle.sec <= 60.0)
 		{
@@ -76,14 +71,13 @@ void RLAS::checkAngles(Angle angle)
 		}
 		else
 		{
-			ui.statusBar->showMessage("Секунды не могут превышать больше 360");
-			continue;
+			statusBar()->showMessage(QString::fromLocal8Bit("Секунды не могут превышать больше 60"));
 		}
 		if (grad_is_correct == min_is_correct == sec_is_correct == true)
 		{
 			AngleIsCorrect = true;
 		}
-	}
+		return AngleIsCorrect;
 }
 
 
@@ -137,11 +131,20 @@ Point  RLAS::setStationCoordinates(vector<Point> points, double z, double ctgY)
 	return Point({ x,y });
 }
 
-//make me
+
 void  RLAS::getStationCoordinates(Point station, RLAS* Window)
 {
-	Window->ui.Station_X->setText(QString::number(station.x, 'f', 3));
-	Window->ui.Station_Y->setText(QString::number(station.y, 'f', 3));
+	//Window->ui.Station_X->setText(QString::number(station.x, 'f', 3));
+	//Window->ui.Station_Y->setText(QString::number(station.y, 'f', 3));
+	setStatusBar(nullptr);
+	Station_X = new QLabel(this);
+	Station_Y = new QLabel(this);
+	statusBar()->addWidget(Station_X);
+	statusBar()->addWidget(Station_Y);
+	Station_X->setText("X = " + QString::number(station.x, 'f', 4));
+	Station_Y->setText("Y = " + QString::number(station.y, 'f', 4));
+	
+	
 }
 void RLAS::Calculate()
 {
@@ -151,9 +154,10 @@ void RLAS::Calculate()
 		alpha,
 		beta;
 	importAngles(alpha, beta);
-	checkAngles(alpha);
-	checkAngles(beta);
-	double ctgY = setCtgY(points, alpha, beta);
-	double z = setZ(points, alpha, beta, ctgY);
-	getStationCoordinates(setStationCoordinates(points, z, ctgY),this);
+	if (checkAngles(alpha) && checkAngles(beta))
+	{
+		double ctgY = setCtgY(points, alpha, beta);
+		double z = setZ(points, alpha, beta, ctgY);
+		getStationCoordinates(setStationCoordinates(points, z, ctgY),this);
+	}
 }

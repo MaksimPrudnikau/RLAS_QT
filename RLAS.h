@@ -20,7 +20,7 @@ public:
 
    void importPoints(vector<Point>&);
    void importAngles(Angle&, Angle&);
-   void checkAngles(Angle);
+   bool checkAngles(Angle);
    double ctg(Angle);
    double setCtgY(vector<Point>, Angle, Angle);
    double setZ(vector<Point>, Angle, Angle, double);
@@ -31,5 +31,7 @@ private slots:
     void Calculate();
 private:
     Ui::RLASClass ui;
+    QLabel* Station_X;
+    QLabel* Station_Y;
 };
 
