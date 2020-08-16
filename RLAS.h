@@ -16,8 +16,6 @@ class RLAS : public QMainWindow
 public:
     RLAS(QWidget *parent = Q_NULLPTR);
 
-   void ifDouble();
-
    void importPoints(vector<Point>&);
    void importAngles(Angle&, Angle&);
    bool checkAngles(Angle);

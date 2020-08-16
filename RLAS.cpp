@@ -11,10 +11,6 @@ RLAS::RLAS(QWidget *parent)
 	connect(ui.CalculateButton, SIGNAL(clicked()), this, SLOT(Calculate));
 }
 
-void RLAS::ifDouble()
-{
-}
-
 //¬вод координат точек
 void RLAS::importPoints(vector<Point>& points)
 {
@@ -134,8 +130,6 @@ Point  RLAS::setStationCoordinates(vector<Point> points, double z, double ctgY)
 
 void  RLAS::getStationCoordinates(Point station, RLAS* Window)
 {
-	//Window->ui.Station_X->setText(QString::number(station.x, 'f', 3));
-	//Window->ui.Station_Y->setText(QString::number(station.y, 'f', 3));
 	setStatusBar(nullptr);
 	Station_X = new QLabel(this);
 	Station_Y = new QLabel(this);
